@@ -1,3 +1,4 @@
+require('dotenv').config();
 const url = require('url');
 const express = require('express')
 const app = express()
@@ -11,8 +12,7 @@ const cors = require('cors')
 const path = require('path')
 const multer = require('multer')
 const { cloudinary } = require('./utils/cloudinary')
-const __filen = url.fileURLToPath(process.cwd());
-const __dirn = path.dirn(__filen);
+const frontendPath = path.join(__dirname, 'Frontend');
 const userRoute = require('./routes/users')
 const authRoute = require('./routes/auth')
 const eventsRoute = require('./routes/events')
@@ -34,9 +34,9 @@ app.use(helmet())
 app.use(morgan('common'))
 app.use(cors())
 app.set('view engine', 'ejs')
-app.use(express.static(path.join(__dirname, './Frontend/build')));
-app.use("*", function(req, res) {
-  res.sendFile(path.join(__dirname, './Frontend/build/index.html'));
+app.use(express.static(path.join(frontendPath, 'build')));
+app.get('*', function(req, res) {
+  res.sendFile(path.join(frontendPath, 'build', 'index.html'));
 });
 
 const storage = multer.diskStorage({
