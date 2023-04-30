@@ -1,3 +1,5 @@
+const fileURLToPath=require('url')
+
 const express = require('express')
 const app = express()
 
@@ -10,7 +12,8 @@ const cors = require('cors')
 const path = require('path')
 const multer = require('multer')
 const { cloudinary } = require('./utils/cloudinary')
-
+const __filename=fielURLToPath(import.meta.url)
+const __dirname=path.dirname(__filename)
 const userRoute = require('./routes/users')
 const authRoute = require('./routes/auth')
 const eventsRoute = require('./routes/events')
@@ -32,6 +35,9 @@ app.use(helmet())
 app.use(morgan('common'))
 app.use(cors())
 app.set('view engine', 'ejs')
+app.use(express.static(path.join(__dirname,'./Frontend/build')))
+
+app.use("*",function(req,res){res.sendFile(path.join(__dirname,'./Frontend/build/index.html'))})
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
